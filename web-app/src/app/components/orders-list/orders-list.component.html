@@ -1,0 +1,39 @@
+<div class="row">
+    <div class="col-md-12">
+      <h2>Your Orders</h2>      
+    </div>
+</div>
+<div *ngIf="!hasOrders">
+    There are no orders.
+</div>
+<div *ngIf="hasOrders" class="row">
+    <div class="col-md-12">
+        <table id="orders">
+            <thead>
+                <th>Order No</th>
+                <th>Description</th>
+                <th>Order Total</th>
+                <th>Products</th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let order of orders">
+                    <td>{{order.orderId}}</td>
+                    <td>{{order.description}}</td>
+                    <td>{{order.orderTotal  | currency: 'USD'}}</td>
+                    <td>
+                        <div class="row header">
+                            <div class="col-md-6">Name</div>
+                            <div class="col-md-3">Quantity</div>
+                            <div class="col-md-3">Price</div>
+                        </div>
+                        <div *ngFor="let orderProduct of order.orderProducts" class="row">
+                            <div class="col-md-6">{{orderProduct.product.name}}</div>
+                            <div class="col-md-3">{{orderProduct.quantity}}</div>
+                            <div class="col-md-3">{{orderProduct.price  | currency: 'USD'}}</div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

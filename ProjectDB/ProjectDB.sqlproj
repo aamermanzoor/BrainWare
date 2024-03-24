@@ -59,12 +59,14 @@
     <Folder Include="Properties" />
     <Folder Include="Tables" />
     <Folder Include="Stored Procedures" />
+    <Folder Include="Views" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\company.sql" />
     <Build Include="Tables\product.sql" />
     <Build Include="Tables\order.sql" />
     <Build Include="Tables\orderproduct.sql" />
+    <Build Include="Views\order.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="ProjectDB.refactorlog" />

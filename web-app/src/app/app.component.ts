@@ -1,22 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { OrdersListComponent } from './components/orders-list/orders-list.component';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, OrdersListComponent],
   selector: 'web-app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  orders: any[] = [];
   year = new Date().getFullYear();
-
-  constructor(http: HttpClient) {
-    http.get<any>('/api/order/1').subscribe((orders) => {
-      this.orders = orders;
-    });
-  }
 }

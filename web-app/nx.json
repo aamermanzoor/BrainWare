@@ -44,7 +44,12 @@
       "linter": "eslint",
       "style": "scss",
       "unitTestRunner": "jest"
+    },
+    "@nx/angular:component": {
+      "style": "css"
     }
   },
-  "defaultProject": "web-app"
+  "defaultProject": "web-app",
+  "defaultBase": "master",
+  "nxCloudAccessToken": "NzZiNzJjNDQtZjQ3Yi00OGI3LWI5YmEtYTdiY2Q0MTI4MTZjfHJlYWQtd3JpdGU="
 }
