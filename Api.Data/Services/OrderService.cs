@@ -1,46 +1,26 @@
 ﻿namespace Api.Data.Services
 {
     using System.Data;
-    using Api.Data.Entities;
+    using Api.Data.Entity;
+    using Api.Data.Infrastructure;
     using Api.Data.Services.Interfaces;
-    using Api.Infrastructure;
+    using Microsoft.EntityFrameworkCore;
 
     public class OrderService : IOrderService
     {
-        private readonly IDatabase _database;
+        private readonly IDatabaseContext _databaseContext;
 
-        public OrderService(IDatabase database)
+        public OrderService(IDatabaseContext databaseContext)
         {
-            _database = database;
+            this._databaseContext = databaseContext;
         }
 
-        public async Task<List<Order>> GetOrdersForCompany(int companyId)
+        public Task<List<Order>> GetOrdersForCompany(int companyId)
         {
-            // Get the orders
-            var ordersQuery = $"SELECT company_name, order_id, description, unit_price, product_id, " +
-                $"quantity, product_name, product_price FROM OrderView where company_id = {companyId}";
-
-            var orders = new List<Order>();
-
-            using (var orderReader = await _database.ExecuteReader(ordersQuery))
-            {
-                while (orderReader.Read())
-                {
-                    var order = (IDataRecord)orderReader;
-
-                    orders.Add(new Order
-                    {
-                        CompanyName = order.GetString(0),
-                        OrderId = order.GetInt32(1),
-                        Description = order.GetString(2),
-                        UnitPrice = order.GetDecimal(3),
-                        ProductId = order.GetInt32(4),
-                        Quantity = order.GetInt32(5),
-                        ProductName = order.GetString(6),
-                        ProductPrice = order.GetDecimal(7)
-                    });
-                }
-            }
+            var orders = this._databaseContext.Orders
+                .Include(o => o.Products).ThenInclude(o=> o.Product)
+                .Where(o => o.CompanyId == companyId)
+                .ToListAsync();
 
             return orders;
         }

@@ -1,6 +1,6 @@
 ﻿namespace Api.Data.Services.Interfaces
 {
-    using Api.Data.Entities;
+    using Api.Data.Entity;
 
     public interface IOrderService
     {

@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { OrderService } from 'src/app/services/order.service';
+import { OrderModel } from 'src/app/models/order.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'web-app-orders-list',
@@ -9,18 +11,45 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './orders-list.component.html',
   styleUrl: './orders-list.component.css',
 })
-export class OrdersListComponent {
-  orders: any[] = [];
+export class OrdersListComponent implements OnInit, OnDestroy {
+  companyId : number = 1;
+  isLoading : boolean = false;
+  hasError : boolean = false;
+  orders: OrderModel[] = [];
+  orderSubscription: Subscription = new Subscription();
 
-  constructor(http: HttpClient) {
-    // todo this should be in a separate service
-    // also handle errors and display user an appropriate message
-    http.get<any>('/api/order/1').subscribe((orders) => {
-      this.orders = orders;
-    });    
+  constructor(private readonly orderService : OrderService) {    
   }
 
-  get hasOrders() : boolean{
-    return this.orders && this.orders.length > 0;
+  ngOnInit(): void {
+    this.loadOrders();
+  }
+
+  loadOrders(): void {
+    this.isLoading = true;
+    this.orderSubscription = this.orderService.getOrdersForCompany(this.companyId).subscribe({
+      next: (data: OrderModel[]) => {        
+        this.orders = data;        
+        this.isLoading = false;
+      },
+      error: () => {
+        this.hasError = true;
+        this.isLoading = false;
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.orderSubscription) {
+      this.orderSubscription.unsubscribe();
+    }
+  }
+
+  get showOrders() : boolean {
+    return !this.hasError && !this.isLoading && this.orders && this.orders.length > 0;
+  }
+
+  get showNoOrdersMessage() : boolean {
+    return !this.hasError && !this.isLoading && (!this.orders || this.orders.length === 0);
   }
 }

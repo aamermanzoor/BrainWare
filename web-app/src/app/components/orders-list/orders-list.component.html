@@ -3,17 +3,25 @@
       <h2>Your Orders</h2>      
     </div>
 </div>
-<div *ngIf="!hasOrders">
+<div *ngIf="hasError" class="alert alert-danger" role="alert">
+    There was an error loading orders data.
+</div>
+<div *ngIf="isLoading" class="alert alert-info" role="alert">
+    Orders are loading...
+</div>
+<div *ngIf="showNoOrdersMessage" class="alert alert-info" role="alert">
     There are no orders.
 </div>
-<div *ngIf="hasOrders" class="row">
+<div *ngIf="showOrders" class="row">
     <div class="col-md-12">
-        <table id="orders">
+        <table id="orders" class="table table-striped">
             <thead>
-                <th>Order No</th>
-                <th>Description</th>
-                <th>Order Total</th>
-                <th>Products</th>
+                <tr>
+                    <th>Order No</th>
+                    <th>Description</th>
+                    <th>Order Total</th>
+                    <th>Products</th>
+                </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let order of orders">
@@ -21,15 +29,23 @@
                     <td>{{order.description}}</td>
                     <td>{{order.orderTotal  | currency: 'USD'}}</td>
                     <td>
-                        <div class="row header">
-                            <div class="col-md-6">Name</div>
-                            <div class="col-md-3">Quantity</div>
-                            <div class="col-md-3">Price</div>
-                        </div>
-                        <div *ngFor="let orderProduct of order.orderProducts" class="row">
-                            <div class="col-md-6">{{orderProduct.product.name}}</div>
-                            <div class="col-md-3">{{orderProduct.quantity}}</div>
-                            <div class="col-md-3">{{orderProduct.price  | currency: 'USD'}}</div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let orderProduct of order.products">
+                                        <td>{{orderProduct.productName}}</td>
+                                        <td>{{orderProduct.quantity}}</td>
+                                        <td>{{orderProduct.price  | currency: 'USD'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </td>
                 </tr>
